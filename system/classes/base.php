@@ -2,6 +2,9 @@
 
 class Base {
   
+  public static $variables = array();
+  public $params;
+  
   /**
    * Get the DB connection info, and connect the the database using PHP ActiveRecord
    * Can use (mysql, sqlite, postgresql, oracle)
@@ -57,6 +60,10 @@ class Base {
       
     }else
       die('<br />Make sure you have set your environment in <code>config/config.php</code> and your database information in <code>config/database.php</code>');
+  }
+  
+  function __set($name, $value) {
+    Base::$variables[] = array($name, $value);
   }
   
 }

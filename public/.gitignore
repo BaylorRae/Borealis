@@ -1,0 +1,6 @@
+*
+!.gitignore
+!.htaccess
+!borealis_index.php
+!javascripts
+!stylesheets
