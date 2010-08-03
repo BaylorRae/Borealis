@@ -12,6 +12,17 @@ $Map->config(array(
     'default_format' => 'html'
   ));
 
-$Map->connect('/test_page');
+  
+$Map->connect('/add_comment/:action/:id', array(
+    'filename' => 'add_comment'
+  ));
+  
+$Map->connect('/add_comment/:action', array(
+    'filename' => 'add_comment'
+  ));
+
+$Map->connect('/add_comment', array(
+    'filename' => 'add_comment'
+  ));
 
 ?>
