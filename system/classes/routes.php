@@ -39,13 +39,9 @@ class Routes extends Base {
    * @return void
    * @author Baylor Rae'
    */
-  public function connect($path, $options) {
-    
-    if( is_array($options) ) {
-      
-      if( !isset($options['filename']) )
-        die('<br />Make sure you includeincluded a filename for your connection in <code>config/routes.php</code>');
-      
+  public function connect($path, $options = null) {
+    $options = (empty($options)) ? array() : $options;
+    if( is_array($options) ) {      
             
       $this->connections[] = array_merge(
         array('route' => $path),
@@ -277,9 +273,9 @@ class Routes extends Base {
                     
           $class->params = $this->params();
           Base::$variables[] = array('params', $this->params());
-                              
+                                                  
           $class->$format();
-                    
+                              
           if( count(Base::$variables) ) {
             foreach( Base::$variables as $var => $value ) {
               $$value[0] = $value[1];
@@ -291,9 +287,18 @@ class Routes extends Base {
         }
         
         // This method doesn't exist so load the real file
-        elseif( file_exists(BASE_PATH . '/public/' . $filename . '.' . $this->convert_format($format) ) )
+        elseif( file_exists(BASE_PATH . '/public/' . $filename . '.' . $this->convert_format($format) ) ) {
+          
+          Base::$variables[] = array('params', $this->params());
+          if( count(Base::$variables) ) {
+            foreach( Base::$variables as $var => $value ) {
+              $$value[0] = $value[1];
+            }
+          }
+          
           include BASE_PATH . '/public/' . $filename . '.' . $this->convert_format($format);
-        
+        }
+ 
         // The real file doesn't exist either
         else
           die('<br />Make sure you have created your default page at <code>' . BASE_PATH . '/public/' . $filename . '.' . $this->convert_format($format) . '</code>');
@@ -329,6 +334,9 @@ class Routes extends Base {
       }
     }
     
+    // Add the format
+    $output['format'] = $this->revert_format($this->path->format);
+    
     // $_POST
     foreach( $_POST as $var => $value ) {
       $output[$var] = $value;
@@ -339,7 +347,7 @@ class Routes extends Base {
       if( $var != 'borealis_url' )
         $output[$var] = $value;
     }
-    
+            
     return $output;
     
   }
